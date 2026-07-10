@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schema 2026 — Medlemsinfo</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..900;1,14..32,300..900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="images/sommarteater-logo-yellow.png">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="container">
+      <a href="index.html" class="topbar-back">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Medlemsinfo
+      </a>
+      <div class="topbar-brand">
+        <span class="topbar-title">Sommarteatern Ystad</span>
+        <img src="images/sommarteater-logo-yellow.png" alt="Sommarteatern Ystad" class="topbar-logo">
+      </div>
+    </div>
+  </div>
+
+  <section class="section" style="padding-bottom: 24px;">
+    <div class="container">
+      <div class="page-header-row">
+        <div class="page-header-text">
+          <p class="section-kicker">Produktionsschema</p>
+          <h1 class="page-title">Schema 2026</h1>
+        </div>
+        <img src="images/accent-schema.jpg" alt="" class="page-photo">
+      </div>
+    </div>
+  </section>
+
+  <section class="container" style="padding-bottom: 56px;">
+    <div class="embed-wrap">
+      <iframe id="embed-frame" title="Produktionsschema 2026"></iframe>
+      <div id="embed-loading" class="embed-loading" style="display:none;">
+        <div class="embed-loading-spinner"></div>
+        <p class="embed-loading-text">Laddar schema…</p>
+      </div>
+      <div id="embed-fallback" class="embed-fallback" style="display:none;">
+        <h3>Schemat är inte kopplat ännu</h3>
+        <p>Länken till det publicerade schemat saknas. Uppdatera <code>SCHEMA_EMBED_URL</code> i <code>js/schema-config.js</code> med Apps Script-webbappens adress.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <div class="container">
+
+      <p class="footer-links-title">Mer från Sommarteatern</p>
+      <div class="footer-links">
+        <a href="https://www.sommarteaternystad.com" target="_blank" rel="noopener" class="footer-link-pill">Sommarteatern Ystad</a>
+        <a href="https://teaterskolan.sommarteaternystad.com" target="_blank" rel="noopener" class="footer-link-pill">Teaterskolan</a>
+        <a href="https://jul.sommarteaternystad.com" target="_blank" rel="noopener" class="footer-link-pill">Jul hos Sommarteatern</a>
+        <a href="https://sommarteaternplay.com" target="_blank" rel="noopener" class="footer-link-pill">Sommarteatern Play</a>
+      </div>
+
+      <div class="footer-bottom">
+        <span>© 2026 Sommarteatern Ystad</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/schema-config.js"></script>
+  <script src="js/embed.js"></script>
+  <script>initEmbed(SCHEMA_EMBED_URL, "REPLACE_WITH_DEPLOYMENT_ID");</script>
+
+</body>
+</html>
