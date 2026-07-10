@@ -1,4 +1,10 @@
-function doGet() {
+function doGet(e) {
+  // ── NYTT: JSON-endpoint för fristående frontend (medlemssidan) ──
+  if (e && e.parameter && e.parameter.action === 'getData') {
+    return ContentService.createTextOutput(JSON.stringify(getData()))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+
   return HtmlService.createTemplateFromFile('Index')
     .evaluate()
     .setTitle('PRODUKTIONSSCHEMA 2026')

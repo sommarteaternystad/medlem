@@ -10,6 +10,79 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..900;1,14..32,300..900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="images/sommarteater-logo-yellow.png">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ══════════════════════════════════════════════
+       SCHEMA-VERKTYG — scopead under #schema-app
+       så inget krockar med sajtens egna klasser
+    ══════════════════════════════════════════════ */
+    #schema-app {
+      --color-rep: #3b82f6;
+      --color-huvud: #1e40af;
+      --color-lilla-rep: #06b6d4;
+      --color-lilla: #10b981;
+      --color-bygg: #f59e0b;
+      --color-trivsel: #ef4444;
+      --color-fest: #fbbf24;
+      --color-natt: #1e293b;
+      --color-natt-rep: #a855f7;
+      --color-samling: #93c5fd;
+    }
+
+    #schema-app { font-family: 'Poppins', sans-serif; }
+
+    #schema-app #app-container { padding: 5px; max-width: 2500px; margin: 0 auto; }
+
+    #schema-app .week-brick { background: white; border-radius: 12px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; }
+    #schema-app .week-label { background: #f1f5f9; padding: 8px; font-weight: 700; text-align: center; border-bottom: 1px solid #e2e8f0; font-size: 1rem; color: #475569; }
+
+    #schema-app .days-grid { display: flex; flex-direction: row !important; width: 100%; background: #fff; position: relative; }
+    #schema-app .day-column { flex: 1; min-width: 0; border-right: 1px solid #f1f5f9; position: relative; padding-bottom: 20px; }
+    #schema-app .day-column:last-child { border-right: none; }
+
+    #schema-app .day-header { padding: 5px 1px; text-align: center; border-bottom: 1px solid #f1f5f9; background: #fff; z-index: 10; position: relative; }
+    #schema-app .day-name { font-size: 0.6rem; text-transform: uppercase; color: #94a3b8; font-weight: 600; }
+    #schema-app .day-date { font-weight: 700; font-size: 0.75rem; }
+
+    #schema-app .event-block {
+      position: absolute; border-radius: 4px; padding: 4px; color: white; cursor: pointer;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1); display: flex; flex-direction: column;
+      box-sizing: border-box; overflow: hidden; border-bottom: 2px solid rgba(255,255,255,0.2);
+    }
+
+    #schema-app .event-title { font-weight: 700; line-height: 1.1; font-size: 0.55rem; margin-bottom: 2px; white-space: normal; word-wrap: break-word; }
+    #schema-app .event-time { font-weight: 700; font-size: 0.5rem; opacity: 0.95; margin-bottom: 2px; }
+    #schema-app .event-desc-main { font-size: 0.45rem; line-height: 1.1; opacity: 0.85; display: block; overflow: hidden; white-space: normal; word-wrap: break-word; }
+
+    #schema-app .ledigt-tag { position: absolute; top: 60px; left: 0; right: 0; text-align: center; color: #cbd5e1; font-weight: 600; font-style: italic; font-size: 0.6rem; }
+
+    @media (min-width: 1000px) {
+      #schema-app .event-block { padding: 8px; border-radius: 8px; }
+      #schema-app .event-title { font-size: 0.8rem; line-height: 1.2; }
+      #schema-app .event-time { font-size: 0.7rem; }
+      #schema-app .event-desc-main { font-size: 0.65rem; }
+    }
+
+    /* MODAL / DEEP DIVE STYLING */
+    #schema-app #detail-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8fafc; z-index: 5000; display: none; overflow-y: auto; padding: 15px; box-sizing: border-box; }
+    #schema-app .modal-nav { display: flex; justify-content: space-between; align-items: center; background: white; padding: 10px; border-radius: 10px; margin-bottom: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+    #schema-app .close-btn { background: #111; color: white; border: none; padding: 8px 15px; border-radius: 8px; cursor: pointer; font-weight: 700; font-size: 0.8rem; }
+
+    #schema-app .detail-list { display: flex; flex-direction: column; gap: 15px; max-width: 1200px; margin: 0 auto; }
+    #schema-app .detail-row-group { display: flex; flex-direction: row; gap: 15px; width: 100%; align-items: stretch; }
+    #schema-app .detail-card {
+      background: #fff; border-radius: 12px; padding: 15px; border-left: 8px solid #3b82f6;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05); border: 1px solid #e2e8f0; flex: 1; min-width: 0;
+    }
+
+    @media print {
+      @page { size: A4 landscape; margin: 5mm; }
+      body { background: white; }
+      .topbar, .page-hero, .site-footer, #schema-app .modal-nav { display: none !important; }
+      #schema-app .week-brick { box-shadow: none; border: 1px solid #000; border-radius: 0; height: 190mm !important; margin: 0; page-break-after: always; display: flex !important; flex-direction: column !important; }
+      #schema-app .day-column { border-right: 1px solid #000 !important; }
+      #schema-app .event-block { border: 0.5pt solid #000 !important; border-bottom: 2mm solid white !important; -webkit-print-color-adjust: exact; }
+    }
+  </style>
 </head>
 <body>
 
@@ -26,29 +99,33 @@
     </div>
   </div>
 
-  <section class="section" style="padding-bottom: 24px;">
+  <section class="page-hero" style="background-image:url('images/accent-schema.jpg'); padding-bottom: 32px;">
     <div class="container">
-      <div class="page-header-row">
-        <div class="page-header-text">
-          <p class="section-kicker">Produktionsschema</p>
-          <h1 class="page-title">Schema 2026</h1>
-        </div>
-        <img src="images/accent-schema.jpg" alt="" class="page-photo">
+      <p class="section-kicker">Produktionsschema</p>
+      <h1 class="page-title">Schema 2026</h1>
+      <div class="btn-row">
+        <button onclick="window.print()" class="btn btn-gold">Spara PDF (A4)</button>
       </div>
     </div>
   </section>
 
+  <!-- ═══════════════════════════════════════
+       SCHEMA-VERKTYGET (tidigare inbäddat via iframe,
+       nu inbakat direkt på sidan — samma funktion, oförändrad)
+  ════════════════════════════════════════ -->
   <section class="container" style="padding-bottom: 56px;">
-    <div class="embed-wrap">
-      <iframe id="embed-frame" title="Produktionsschema 2026"></iframe>
-      <div id="embed-loading" class="embed-loading" style="display:none;">
-        <div class="embed-loading-spinner"></div>
-        <p class="embed-loading-text">Laddar schema…</p>
+    <div id="schema-app">
+
+      <div id="app-container">Laddar schema...</div>
+
+      <div id="detail-overlay">
+        <div class="modal-nav">
+          <h2 id="detail-title" style="margin:0; font-size: 1rem;"></h2>
+          <button onclick="closeDetails()" class="close-btn">STÄNG X</button>
+        </div>
+        <div class="detail-list" id="detail-content"></div>
       </div>
-      <div id="embed-fallback" class="embed-fallback" style="display:none;">
-        <h3>Schemat är inte kopplat ännu</h3>
-        <p>Länken till det publicerade schemat saknas. Uppdatera <code>SCHEMA_EMBED_URL</code> i <code>js/schema-config.js</code> med Apps Script-webbappens adress.</p>
-      </div>
+
     </div>
   </section>
 
@@ -69,9 +146,199 @@
     </div>
   </footer>
 
-  <script src="js/schema-config.js"></script>
-  <script src="js/embed.js"></script>
-  <script>initEmbed(SCHEMA_EMBED_URL, "REPLACE_WITH_DEPLOYMENT_ID");</script>
+<script>
+  const GAS_URL = 'https://script.google.com/a/macros/sommarteaternystad.com/s/AKfycbzAdJIlaQb-NHkLTGULHJCWZ9wid6Bg_65Q3axr3Mt-G5GuedMEY_Zk094DxscVnjU/exec';
+
+  let allData = {};
+
+  const COLORS = {
+    'REPETITION': '#3b82f6',
+    'HUVUDFÖRESTÄLLNING': '#1e40af',
+    'REPETITION LILLA FÖRESTÄLLNING': '#06b6d4',
+    'LILLA FÖRESTÄLLNING': '#10b981',
+    'BYGG & FIX': '#f59e0b',
+    'TRIVSEL': '#ef4444',
+    'FEST': '#fbbf24',
+    'NATTFÖRESTÄLLNING': '#1e293b',
+    'REPETITION NATTFÖRESTÄLLNING': '#a855f7',
+    'SAMLING': '#93c5fd'
+  };
+
+  const DETAIL_CATEGORY_STYLES = {
+    'lunch':       { bg: '#fefce8', border: '#ca8a04' },
+    'på scen':     { bg: '#eff6ff', border: '#3b82f6' },
+    'bakom scen':  { bg: '#f0fdf4', border: '#16a34a' },
+  };
+
+  function timeToMin(t) {
+    const p = t.split('.');
+    return parseInt(p[0]) * 60 + parseInt(p[1] || 0);
+  }
+
+  function render() {
+    const container = document.getElementById('app-container');
+    container.innerHTML = '';
+    const weeks = {};
+
+    allData.main.forEach(ev => {
+      const d = new Date(ev.date);
+      const wk = getWeekNumber(d);
+      const key = `VECKA ${wk} — 2026`;
+      if (!weeks[key]) weeks[key] = { wk, mon: getMonday(d), evs: {}, isoDates: [] };
+      if (!weeks[key].evs[ev.date]) {
+        weeks[key].evs[ev.date] = [];
+        weeks[key].isoDates.push(ev.date);
+      }
+      weeks[key].evs[ev.date].push(ev);
+    });
+
+    const sortedWeeks = Object.keys(weeks).sort((a,b) => weeks[a].wk - weeks[b].wk);
+    const todayISO = new Date().toLocaleDateString('en-CA');
+    let currentWeekId = null;
+
+    const isMobile = window.innerWidth < 1000;
+    const baseScale = isMobile ? 0.5 : 0.85;
+
+    sortedWeeks.forEach(wkKey => {
+      const w = weeks[wkKey];
+      const brick = document.createElement('div');
+      brick.className = 'week-brick';
+      brick.id = 'week-' + w.wk;
+      if (w.isoDates.some(date => date === todayISO)) currentWeekId = brick.id;
+
+      let maxEnd = 0;
+      Object.values(w.evs).forEach(day => {
+        day.forEach(ev => {
+          const end = ev.time.split('-')[1] ? timeToMin(ev.time.split('-')[1]) : 1200;
+          if (end > maxEnd) maxEnd = end;
+        });
+      });
+      const gridHeight = maxEnd > 0 ? (maxEnd - 480) * baseScale + 80 : 300;
+
+      brick.innerHTML = `<div class="week-label">${wkKey}</div><div class="days-grid" style="height:${gridHeight}px" id="g-${wkKey}"></div>`;
+      container.appendChild(brick);
+
+      const grid = document.getElementById(`g-${wkKey}`);
+      for (let i = 0; i < 7; i++) {
+        const cur = new Date(w.mon);
+        cur.setDate(cur.getDate() + i);
+        const iso = cur.toLocaleDateString('en-CA');
+        const col = document.createElement('div');
+        col.className = 'day-column';
+        col.innerHTML = `<div class="day-header"><div class="day-name">${cur.toLocaleDateString('sv-SE',{weekday:'short'})}</div><div class="day-date">${cur.getDate()} ${cur.toLocaleDateString('sv-SE',{month:'short'})}</div></div>`;
+
+        const evs = w.evs[iso] || [];
+        if (evs.length === 0) {
+          col.innerHTML += `<div class="ledigt-tag">Ledigt</div>`;
+        } else {
+          evs.sort((a, b) => timeToMin(a.time.split('-')[0]) - timeToMin(b.time.split('-')[0]));
+          evs.forEach((ev) => {
+            const startMin = timeToMin(ev.time.split('-')[0]);
+            const endMin = ev.time.split('-')[1] ? timeToMin(ev.time.split('-')[1]) : startMin + 60;
+            const simCount = evs.filter(other => other.time.split('-')[0] === ev.time.split('-')[0]).length;
+            const simIndex = evs.filter(other => other.time.split('-')[0] === ev.time.split('-')[0]).indexOf(ev);
+            const block = document.createElement('div');
+            block.className = 'event-block';
+            block.style.backgroundColor = COLORS[ev.cat] || '#64748b';
+            const topPos = (startMin - 480) * baseScale;
+            const heightPos = (endMin - startMin) * baseScale;
+            block.style.top = (topPos + 45) + "px";
+            block.style.height = Math.max(isMobile ? 38 : 50, heightPos - 3) + "px";
+            const widthPerc = 100 / simCount;
+            block.style.width = `calc(${widthPerc}% - 2px)`;
+            block.style.left = `calc(${simIndex * widthPerc}% + 1px)`;
+            block.innerHTML = `<div class="event-time">${ev.time}</div><div class="event-title">${ev.title}</div><div class="event-desc-main">${ev.desc}</div>`;
+            block.onclick = () => openDetails(iso);
+            col.appendChild(block);
+          });
+        }
+        grid.appendChild(col);
+      }
+    });
+
+    if (currentWeekId) {
+      setTimeout(() => document.getElementById(currentWeekId).scrollIntoView({ behavior: 'smooth' }), 600);
+    }
+  }
+
+  function openDetails(date) {
+    const overlay = document.getElementById('detail-overlay');
+    const content = document.getElementById('detail-content');
+    content.innerHTML = '';
+    const dObj = new Date(date);
+    document.getElementById('detail-title').innerText = dObj.toLocaleDateString('sv-SE', {weekday:'long', day:'numeric', month:'long'});
+
+    const evs = allData.details.filter(d => d.date === date);
+    evs.sort((a,b) => timeToMin(a.time.split('-')[0]) - timeToMin(b.time.split('-')[0]));
+
+    const groups = [];
+    evs.forEach(ev => {
+      const startTime = ev.time.split('-')[0].trim();
+      let group = groups.find(g => g.time === startTime);
+      if (!group) { group = { time: startTime, events: [] }; groups.push(group); }
+      group.events.push(ev);
+    });
+
+    groups.forEach(group => {
+      const row = document.createElement('div');
+      row.className = 'detail-row-group';
+      group.events.forEach(ev => {
+        const card = document.createElement('div');
+        card.className = 'detail-card';
+        const catStyle = DETAIL_CATEGORY_STYLES[ev.category] || { bg: '#fff', border: '#64748b' };
+        card.style.backgroundColor = catStyle.bg;
+        card.style.borderLeftColor = catStyle.border;
+        card.innerHTML = `
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+            <span style="font-weight:700;font-size:0.75rem;color:${catStyle.border};text-transform:uppercase;">VEM: ${ev.who}</span>
+            ${ev.category ? `<span style="font-size:0.65rem;background:${catStyle.border};color:white;border-radius:20px;padding:2px 8px;font-weight:600;">${ev.category}</span>` : ''}
+          </div>
+          <h3 style="margin:5px 0;font-size:1.1rem;white-space:normal;word-wrap:break-word;">${ev.time} — ${ev.title}</h3>
+          ${ev.place ? `<p style="margin:2px 0 6px;font-size:0.8rem;color:#64748b;">📍 ${ev.place}</p>` : ''}
+          <p style="margin:0;font-size:0.9rem;color:#475569;white-space:normal;word-wrap:break-word;">${ev.desc}</p>
+        `;
+        row.appendChild(card);
+      });
+      content.appendChild(row);
+    });
+
+    overlay.style.display = 'block';
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeDetails() {
+    document.getElementById('detail-overlay').style.display = 'none';
+    document.body.style.overflow = 'auto';
+  }
+
+  function getMonday(d) {
+    d = new Date(d);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.setDate(diff));
+  }
+
+  function getWeekNumber(d) {
+    const date = new Date(d.getTime());
+    date.setHours(0,0,0,0);
+    date.setDate(date.getDate()+3-(date.getDay()+6)%7);
+    const week1 = new Date(date.getFullYear(),0,4);
+    return 1+Math.round(((date.getTime()-week1.getTime())/86400000-3+(week1.getDay()+6)%7)/7);
+  }
+
+  async function loadSchema() {
+    try {
+      const res = await fetch(GAS_URL + '?action=getData', { cache: 'no-store' });
+      allData = await res.json();
+      render();
+    } catch (e) {
+      document.getElementById('app-container').innerHTML =
+        '<div style="text-align:center;padding:60px 24px;color:#64748b;">⚠️ Kunde inte ladda schemat. Försök ladda om sidan.</div>';
+    }
+  }
+
+  window.addEventListener('load', loadSchema);
+</script>
 
 </body>
 </html>
