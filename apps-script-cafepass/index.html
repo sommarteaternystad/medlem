@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <style>
+      :root {
+        --bg:           #f0f4f8;
+        --surface:      #ffffff;
+        --surface-alt:  #f8fafc;
+        --border:       #e2e8f0;
+        --text-primary: #0f172a;
+        --text-secondary:#475569;
+        --text-muted:   #94a3b8;
+
+        /* Fresh accent — teal-green */
+        --accent:       #0d9488;
+        --accent-hover: #0f766e;
+        --accent-light: #f0fdfa;
+        --accent-mid:   #ccfbf1;
+
+        --danger:       #e11d48;
+        --danger-light: #fff1f2;
+        --available:    #16a34a;
+        --taken:        #cbd5e1;
+
+        --radius-xl: 24px;
+        --radius-lg: 16px;
+        --radius-md: 12px;
+        --radius-sm: 8px;
+        --shadow-sm: 0 1px 4px rgba(15,23,42,0.06);
+        --shadow:    0 2px 12px rgba(15,23,42,0.08);
+        --shadow-lg: 0 8px 32px rgba(15,23,42,0.12);
+      }
+
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+
+      body {
+        font-family: 'Nunito Sans', sans-serif;
+        background: var(--bg);
+        color: var(--text-primary);
+        padding: 20px 16px 72px;
+        line-height: 1.5;
+      }
+
+      .main-container { max-width: 820px; margin: 0 auto; }
+
+      /* ── HEADER ── */
+      .header {
+        text-align: center;
+        padding: 28px 0 32px;
+      }
+      .logo { max-width: 110px; height: auto; margin-bottom: 18px; }
+      .header h1 {
+        font-family: 'Nunito', sans-serif;
+        font-size: 2.1rem;
+        font-weight: 900;
+        margin: 0 0 6px;
+        color: var(--text-primary);
+        letter-spacing: -0.8px;
+      }
+      .header p {
+        color: var(--text-secondary);
+        margin: 0;
+        font-size: 0.97rem;
+      }
+
+      /* ── CARD ── */
+      .card {
+        background: var(--surface);
+        border-radius: var(--radius-xl);
+        border: 1px solid var(--border);
+        box-shadow: var(--shadow);
+        margin-bottom: 16px;
+        overflow: hidden;
+      }
+      .card-body { padding: 24px; }
+
+      /* ── FORM ── */
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 14px;
+      }
+      .form-grid .full { grid-column: 1 / -1; }
+      @media (max-width: 520px) { .form-grid { grid-template-columns: 1fr; } }
+
+      .field { display: flex; flex-direction: column; gap: 5px; }
+      .field label {
+        font-size: 0.75rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.07em;
+        color: var(--text-secondary);
+      }
+      .field input {
+        padding: 11px 14px;
+        border: 2px solid var(--border);
+        border-radius: var(--radius-sm);
+        font-family: 'Nunito Sans', sans-serif;
+        font-size: 15px;
+        color: var(--text-primary);
+        background: var(--surface);
+        transition: border-color 0.15s, box-shadow 0.15s;
+        width: 100%;
+      }
+      .field input:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 3px rgba(13,148,136,0.12);
+      }
+      .field input.invalid {
+        border-color: var(--danger);
+        background: var(--danger-light);
+        box-shadow: 0 0 0 3px rgba(225,29,72,0.08);
+      }
+
+      /* ── INFO ACCORDION ── */
+      details { border: none; }
+      details summary {
+        padding: 20px 24px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        list-style: none;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-radius: var(--radius-xl);
+        transition: background 0.15s;
+        color: var(--text-primary);
+      }
+      details summary:hover { background: var(--surface-alt); }
+      details summary::-webkit-details-marker { display: none; }
+      details summary::after { content: '▾'; color: var(--text-muted); font-size: 1rem; transition: transform 0.2s; }
+      details[open] summary::after { transform: rotate(180deg); }
+      .info-content {
+        padding: 0 24px 20px;
+        font-size: 0.93rem;
+        color: var(--text-secondary);
+        line-height: 1.75;
+        border-top: 1px solid var(--border);
+        padding-top: 16px;
+      }
+
+      /* ── SECTION HEADING ── */
+      .section-heading {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin: 28px 0 14px;
+      }
+      .section-heading-text {
+        font-family: 'Nunito', sans-serif;
+        font-size: 0.82rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--text-muted);
+        white-space: nowrap;
+      }
+      .section-heading-line {
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
+
+      /* ── PASS CARD ── */
+      .pass-card {
+        background: var(--surface);
+        border: 2px solid var(--border);
+        border-radius: var(--radius-xl);
+        margin-bottom: 12px;
+        overflow: hidden;
+        box-shadow: var(--shadow-sm);
+        transition: border-color 0.15s, box-shadow 0.15s, transform 0.1s;
+      }
+      .pass-card:hover { box-shadow: var(--shadow); transform: translateY(-1px); }
+
+      .pass-header {
+        padding: 18px 20px;
+        cursor: pointer;
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 14px;
+        border-left: 5px solid transparent;
+        user-select: none;
+        transition: background 0.12s;
+      }
+      .pass-header:hover { background: var(--surface-alt); }
+      .pass-header.open { background: var(--surface-alt); }
+
+      .pass-header-left { flex: 1; min-width: 0; }
+
+      /* Event badge */
+      .event-pill {
+        display: inline-block;
+        font-family: 'Nunito', sans-serif;
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: white;
+        padding: 3px 11px;
+        border-radius: 20px;
+        margin-bottom: 8px;
+      }
+
+      /* Date — big, round, bold */
+      .pass-date {
+        font-family: 'Nunito', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 900;
+        color: var(--text-primary);
+        letter-spacing: -0.3px;
+        margin-bottom: 4px;
+        line-height: 1.2;
+      }
+
+      /* Time chip */
+      .pass-time-chip {
+        display: inline-block;
+        font-size: 0.78rem;
+        font-weight: 700;
+        background: var(--border);
+        color: var(--text-secondary);
+        padding: 2px 10px;
+        border-radius: 20px;
+        margin-bottom: 6px;
+      }
+
+      .pass-meta {
+        font-size: 0.82rem;
+        color: var(--text-secondary);
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        flex-wrap: wrap;
+        margin-top: 2px;
+      }
+      .ansvarig-chip {
+        font-size: 0.78rem;
+        font-weight: 700;
+        background: var(--accent-light);
+        color: var(--accent);
+        border: 1px solid var(--accent-mid);
+        border-radius: 20px;
+        padding: 2px 10px;
+      }
+
+      .pass-header-right {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 5px;
+        flex-shrink: 0;
+        padding-top: 4px;
+      }
+      .availability-dots { font-size: 1.1em; letter-spacing: 3px; line-height: 1; }
+      .dot-available { color: var(--available); }
+      .dot-taken { color: var(--taken); }
+      .slots-label { font-size: 0.75rem; color: var(--text-muted); white-space: nowrap; font-weight: 600; }
+      .slots-full { color: var(--danger); font-weight: 700; }
+      .toggle-chevron { font-size: 0.75rem; color: var(--text-muted); transition: transform 0.2s; margin-top: 2px; }
+      .pass-header.open .toggle-chevron { transform: rotate(180deg); }
+
+      /* ── DETAILS PANEL ── */
+      .pass-details {
+        display: none;
+        border-top: 2px solid var(--border);
+        background: var(--surface-alt);
+        padding: 16px 20px;
+      }
+      .pass-details.visible { display: block; }
+
+      .slot-list { display: flex; flex-direction: column; gap: 8px; }
+
+      .slot-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 11px 15px;
+        border-radius: var(--radius-md);
+        border: 1.5px solid var(--border);
+        background: var(--surface);
+      }
+      .slot-row.responsible {
+        background: var(--accent-light);
+        border-color: var(--accent-mid);
+      }
+      .slot-row.booked {
+        background: #f8fafc;
+      }
+      .slot-row.open-slot {
+        background: #f0fdf4;
+        border-color: #bbf7d0;
+      }
+
+      .slot-name { font-weight: 700; font-size: 0.88rem; color: var(--text-primary); }
+      .slot-tag {
+        font-size: 0.72rem;
+        font-weight: 800;
+        padding: 3px 9px;
+        border-radius: 20px;
+        white-space: nowrap;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+      .tag-responsible { background: var(--accent-mid); color: var(--accent-hover); }
+      .tag-booked { background: #e2e8f0; color: #475569; }
+      .tag-open { color: var(--available); font-size: 0.83rem; font-weight: 700; text-transform: none; letter-spacing: 0; }
+
+      .boka-btn {
+        background: var(--accent);
+        color: white;
+        padding: 8px 20px;
+        border: none;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        font-family: 'Nunito', sans-serif;
+        font-size: 0.83rem;
+        font-weight: 800;
+        letter-spacing: 0.02em;
+        transition: background 0.12s, transform 0.1s, box-shadow 0.1s;
+        white-space: nowrap;
+      }
+      .boka-btn:hover {
+        background: var(--accent-hover);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(13,148,136,0.25);
+      }
+      .boka-btn:active { transform: translateY(0); }
+      .boka-btn:disabled { background: #cbd5e1; cursor: not-allowed; transform: none; box-shadow: none; }
+
+      /* ── TOAST ── */
+      #status-message {
+        position: fixed;
+        top: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        max-width: 92%;
+        padding: 13px 22px;
+        border-radius: var(--radius-md);
+        display: none;
+        text-align: center;
+        font-family: 'Nunito', sans-serif;
+        font-weight: 800;
+        font-size: 0.9rem;
+        z-index: 9999;
+        box-shadow: var(--shadow-lg);
+        transition: opacity 0.3s;
+      }
+      .success { background: #dcfce7; color: #15803d; border: 1.5px solid #bbf7d0; }
+      .error   { background: #ffe4e6; color: #be123c; border: 1.5px solid #fecdd3; }
+
+      /* ── LOADING / EMPTY ── */
+      .state-box {
+        text-align: center;
+        padding: 48px 24px;
+        color: var(--text-muted);
+      }
+      .state-box .icon { font-size: 2.2rem; margin-bottom: 10px; }
+      .spinner {
+        display: inline-block;
+        width: 20px; height: 20px;
+        border: 2.5px solid var(--border);
+        border-top-color: var(--accent);
+        border-radius: 50%;
+        animation: spin 0.65s linear infinite;
+        vertical-align: middle;
+        margin-right: 8px;
+      }
+      @keyframes spin { to { transform: rotate(360deg); } }
+
+      /* ── SECTION TITLE inside card ── */
+      .card-title {
+        font-family: 'Nunito', sans-serif;
+        font-size: 1.3rem;
+        font-weight: 900;
+        margin: 0 0 20px;
+        color: var(--text-primary);
+        letter-spacing: -0.3px;
+        padding-bottom: 14px;
+        border-bottom: 2px solid var(--border);
+      }
+
+      /* ── FOOTER ── */
+      footer {
+        text-align: center;
+        margin-top: 48px;
+        padding-top: 20px;
+        border-top: 1px solid var(--border);
+        font-size: 12px;
+        color: var(--text-muted);
+      }
+      footer a {
+        color: var(--text-muted);
+        text-decoration: none;
+        font-weight: 700;
+        transition: color 0.15s;
+      }
+      footer a:hover { color: var(--accent); }
+    </style>
+</head>
+<body>
+<div class="main-container">
+
+  <div class="header">
+    <img src="https://i.imgur.com/GSw7Loc.png" alt="Sommarteatern" class="logo">
+    <h1>Boka arbetspass</h1>
+    <p>Välj ett pass nedan — fyll i dina uppgifter och tryck Boka</p>
+  </div>
+
+  <!-- FORMULÄR -->
+  <div class="card">
+    <div class="card-body">
+      <div class="form-grid">
+        <div class="field">
+          <label for="namn">Ditt namn</label>
+          <input type="text" id="namn" placeholder="För- och efternamn" autocomplete="name">
+        </div>
+        <div class="field">
+          <label for="telefon">Telefon</label>
+          <input type="tel" id="telefon" placeholder="070-000 00 00" autocomplete="tel">
+        </div>
+        <div class="field full">
+          <label for="epost">E-postadress</label>
+          <input type="email" id="epost" placeholder="din@epost.se" autocomplete="email">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INFO -->
+  <div class="card" style="padding:0;">
+    <details>
+      <summary><?= infoData.title ?></summary>
+      <div class="info-content"><?= infoData.content ?></div>
+    </details>
+  </div>
+
+  <!-- TOAST -->
+  <div id="status-message"></div>
+
+  <!-- PASS -->
+  <div class="card">
+    <div class="card-body">
+      <h2 class="card-title">Kommande arbetspass</h2>
+      <div id="passes-container">
+        <div class="state-box"><span class="spinner"></span> Laddar pass…</div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <!-- target="_blank" opens in new tab, fixing the admin link issue -->
+    <p><a href="<?= ScriptApp.getService().getUrl() ?>?page=admin" target="_blank">Administration</a></p>
+  </footer>
+
+</div>
+
+<script>
+  // Iframe height sync
+  window.addEventListener('load', () => {
+    if (window.top !== window.self) {
+      setInterval(() => {
+        window.top.postMessage({ type: 'resize-iframe', height: document.body.scrollHeight }, '*');
+      }, 500);
+    }
+  });
+
+  document.addEventListener('DOMContentLoaded', loadPasses);
+
+  // ── COLOUR PALETTE ──
+  // Distinct, vibrant colours per föreställning — same name = same colour always
+  const EVENT_COLORS = [
+    '#0d9488', // teal
+    '#7c3aed', // violet
+    '#ea580c', // orange
+    '#0369a1', // blue
+    '#be185d', // pink
+    '#15803d', // green
+    '#b45309', // amber
+    '#0e7490', // cyan
+    '#6d28d9', // purple
+    '#dc2626', // red
+  ];
+  const colorCache = {};
+  let colorIndex = 0;
+  function eventColor(name) {
+    if (!colorCache[name]) { colorCache[name] = EVENT_COLORS[colorIndex++ % EVENT_COLORS.length]; }
+    return colorCache[name];
+  }
+
+  // ── DOTS ──
+  function dots(available, total) {
+    let s = '';
+    for (let i = 0; i < total; i++) {
+      s += i < available
+        ? '<span class="dot-available" title="Ledig">●</span>'
+        : '<span class="dot-taken" title="Bokad">●</span>';
+    }
+    return `<span class="availability-dots">${s}</span>`;
+  }
+
+  // ── SECTION LABELS mapping (must match Kod.gs) ──
+  let lastSection = null;
+
+  function sectionDivider(section) {
+    if (section === lastSection) return '';
+    lastSection = section;
+    const icons = {
+      'Vårens föreställningar – Teaterskolan': '🌸',
+      'Sommarens föreställningar – Sommarteatern': '☀️',
+      'Jul hos Sommarteatern': '🎄',
+      'Kommande föreställningar': '🎭'
+    };
+    const icon = icons[section] || '🎭';
+    return `
+      <div class="section-heading">
+        <span class="section-heading-text">${icon} ${section}</span>
+        <div class="section-heading-line"></div>
+      </div>`;
+  }
+
+  // ── MAIN RENDER ──
+  // Data är en sorterad array från backend — ingen frontend-sortering behövs
+  function loadPasses() {
+    document.getElementById('passes-container').innerHTML =
+      '<div class="state-box"><span class="spinner"></span> Laddar pass…</div>';
+    google.script.run
+      .withSuccessHandler(renderPasses)
+      .withFailureHandler(() => {
+        document.getElementById('passes-container').innerHTML =
+          '<div class="state-box"><div class="icon">⚠️</div><p>Kunde inte ladda pass. Försök ladda om sidan.</p></div>';
+      })
+      .getGroupedPasses();
+  }
+
+  function renderPasses(passes) {
+    lastSection = null;
+    const container = document.getElementById('passes-container');
+    container.innerHTML = '';
+
+    if (!passes || passes.length === 0) {
+      container.innerHTML = '<div class="state-box"><div class="icon">🎭</div><p>Inga kommande pass just nu.</p></div>';
+      return;
+    }
+
+    // Pre-assign colours in order they appear (stable across renders)
+    passes.forEach(p => eventColor(p.event));
+
+    let html = '';
+    passes.forEach((pass, idx) => {
+      const color = eventColor(pass.event);
+      const isFull = pass.availableSlots === 0;
+
+      html += sectionDivider(pass.section);
+
+      html += `
+        <div class="pass-card" id="card-${idx}">
+          <div class="pass-header" id="hdr-${idx}" style="border-left-color:${color}" onclick="toggleCard(${idx})">
+            <div class="pass-header-left">
+              <div><span class="event-pill" style="background:${color}">${pass.event}</span></div>
+              <div class="pass-date">${pass.date}</div>
+              <div><span class="pass-time-chip">⏰ ${pass.tid}</span></div>
+              <div class="pass-meta">
+                <span>Ansvarig:</span>
+                <span class="ansvarig-chip">${pass.huvudansvarig}</span>
+                <span style="color:var(--text-muted)">· ${pass.uppgift}</span>
+              </div>
+            </div>
+            <div class="pass-header-right">
+              ${dots(pass.availableSlots, pass.totalSlots)}
+              <div class="slots-label ${isFull ? 'slots-full' : ''}">
+                ${isFull ? 'Fullbokat' : `${pass.availableSlots} av ${pass.totalSlots} ledigt`}
+              </div>
+              <div class="toggle-chevron">▼</div>
+            </div>
+          </div>
+          <div class="pass-details" id="det-${idx}">
+            ${buildSlots(pass)}
+          </div>
+        </div>`;
+    });
+
+    container.innerHTML = html;
+  }
+
+  function buildSlots(pass) {
+    let html = '<div class="slot-list">';
+
+    // Ansvarig
+    if (pass.huvudansvarig && pass.huvudansvarig !== 'Ingen angiven') {
+      html += `
+        <div class="slot-row responsible">
+          <span class="slot-name">👤 ${pass.huvudansvarig}</span>
+          <span class="slot-tag tag-responsible">Ansvarig</span>
+        </div>`;
+    }
+
+    // Platser
+    for (let i = 0; i < pass.totalSlots; i++) {
+      if (i < pass.bookedBy.length) {
+        html += `
+          <div class="slot-row booked">
+            <span class="slot-name">${pass.bookedBy[i].name}</span>
+            <span class="slot-tag tag-booked">Bokad</span>
+          </div>`;
+      } else {
+        html += `
+          <div class="slot-row open-slot">
+            <span class="tag-open">Ledig plats</span>
+            <button class="boka-btn" onclick="boka(${pass.passId}, event)">Boka</button>
+          </div>`;
+      }
+    }
+
+    html += '</div>';
+    return html;
+  }
+
+  function toggleCard(idx) {
+    const hdr = document.getElementById('hdr-' + idx);
+    const det = document.getElementById('det-' + idx);
+    const open = det.classList.contains('visible');
+    det.classList.toggle('visible', !open);
+    hdr.classList.toggle('open', !open);
+  }
+
+  // ── BOOKING ──
+  function boka(passId, evt) {
+    evt.stopPropagation(); // don't collapse card when clicking button
+
+    const namn    = document.getElementById('namn').value.trim();
+    const epost   = document.getElementById('epost').value.trim();
+    const telefon = document.getElementById('telefon').value.trim();
+
+    let valid = true;
+    ['namn', 'epost', 'telefon'].forEach(id => {
+      const el = document.getElementById(id);
+      if (!el.value.trim()) { el.classList.add('invalid'); valid = false; }
+      else el.classList.remove('invalid');
+    });
+
+    if (!valid) {
+      showStatus('Fyll i namn, e-post och telefon för att boka.', false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    document.querySelectorAll('.boka-btn').forEach(b => b.disabled = true);
+    showStatus('Bokar…', true);
+
+    google.script.run
+      .withSuccessHandler(res => {
+        showStatus(res.message, res.success);
+        document.querySelectorAll('.boka-btn').forEach(b => b.disabled = false);
+        if (res.success) loadPasses();
+      })
+      .withFailureHandler(() => {
+        showStatus('Tekniskt fel. Försök igen.', false);
+        document.querySelectorAll('.boka-btn').forEach(b => b.disabled = false);
+      })
+      .bokaPass(passId, namn, epost, telefon);
+  }
+
+  // ── TOAST ──
+  function showStatus(msg, ok) {
+    const el = document.getElementById('status-message');
+    el.textContent = msg;
+    el.className = ok ? 'success' : 'error';
+    el.style.display = 'block';
+    el.style.opacity = '1';
+    clearTimeout(el._t);
+    el._t = setTimeout(() => {
+      el.style.opacity = '0';
+      setTimeout(() => { el.style.display = 'none'; el.style.opacity = '1'; }, 320);
+    }, 6000);
+  }
+</script>
+</body>
+</html>

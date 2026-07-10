@@ -10,6 +10,293 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,300..900;1,14..32,300..900&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="images/sommarteater-logo-yellow.png">
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* ══════════════════════════════════════════════
+       REKLAMPASS-VERKTYG — scopead under #reklam-app
+       så inget krockar med sajtens egna klasser (t.ex. .btn)
+    ══════════════════════════════════════════════ */
+    #reklam-app, #reklam-app *, #reklam-app *::before, #reklam-app *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    #reklam-app {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: #F0F4FF;
+      color: #1E293B;
+      padding: 20px 0 60px;
+      line-height: normal;
+    }
+
+    /* ── LOADING ── */
+    #reklam-app #loading {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; padding: 60px 24px; gap: 14px; color: #6366F1;
+    }
+    #reklam-app .spinner {
+      width: 36px; height: 36px; border: 3px solid #E0E7FF;
+      border-top-color: #6366F1; border-radius: 50%;
+      animation: reklamSpin 0.8s linear infinite;
+    }
+    @keyframes reklamSpin { to { transform: rotate(360deg); } }
+
+    /* ── SECTION WRAP ── */
+    #reklam-app .section-wrap { max-width: 1000px; margin: 0 auto; padding: 20px 16px 0; }
+    #reklam-app .section-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    #reklam-app .section-title {
+      font-size: 0.9rem; font-weight: 700; color: #4338CA;
+      display: flex; align-items: center; gap: 6px;
+    }
+    #reklam-app .section-divider { height: 1px; background: #E0E7FF; margin-bottom: 14px; }
+
+    /* ── LOGIN CARD ── */
+    #reklam-app .login-card {
+      max-width: 1000px; margin: 0 auto 0; padding: 0 16px;
+    }
+    #reklam-app .login-box {
+      background: white; border: 1.5px solid #E0E7FF;
+      border-radius: 16px; padding: 18px 20px;
+      display: flex; align-items: flex-end; gap: 12px; flex-wrap: wrap;
+    }
+    #reklam-app .login-box.logged-in {
+      background: #F0FDF4; border-color: #A7F3D0;
+      align-items: center;
+    }
+    #reklam-app .login-field { display: flex; flex-direction: column; gap: 5px; flex: 1; min-width: 140px; }
+    #reklam-app .login-field label { font-size: 0.72rem; font-weight: 700; color: #64748B; text-transform: uppercase; letter-spacing: 0.5px; }
+    #reklam-app .login-field select, #reklam-app .login-field input {
+      padding: 9px 12px; border: 1.5px solid #E0E7FF; border-radius: 9px;
+      font-size: 0.88rem; font-family: inherit; background: #F8F9FF; color: #1E293B;
+      transition: border-color 0.15s;
+    }
+    #reklam-app .login-field select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236366F1' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat; background-position: right 10px center;
+      cursor: pointer;
+    }
+    #reklam-app .login-field input[type=password] { letter-spacing: 4px; font-size: 1rem; }
+    #reklam-app .login-field select:focus, #reklam-app .login-field input:focus { outline: none; border-color: #6366F1; }
+    #reklam-app .login-error { font-size: 0.75rem; color: #DC2626; margin-top: 2px; display: none; }
+    #reklam-app .login-error.show { display: block; }
+    #reklam-app .btn-login {
+      padding: 9px 22px; background: linear-gradient(135deg, #4338CA, #6366F1);
+      color: white; border: none; border-radius: 9px; font-size: 0.88rem;
+      font-weight: 700; font-family: inherit; cursor: pointer;
+      transition: opacity 0.15s, transform 0.15s; white-space: nowrap;
+      align-self: flex-end;
+    }
+    #reklam-app .btn-login:hover { opacity: 0.9; transform: translateY(-1px); }
+    #reklam-app .btn-login:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+    /* Logged-in status bar */
+    #reklam-app .logged-in-info {
+      display: flex; align-items: center; gap: 10px; flex: 1; flex-wrap: wrap;
+    }
+    #reklam-app .logged-in-name {
+      font-size: 1rem; font-weight: 700; color: #065F46;
+    }
+    #reklam-app .logged-in-sub { font-size: 0.78rem; color: #047857; }
+    #reklam-app .passes-mini {
+      display: flex; gap: 5px; align-items: center;
+    }
+    #reklam-app .pass-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: #D1FAE5; border: 1.5px solid #6EE7B7;
+      transition: background 0.3s;
+    }
+    #reklam-app .pass-dot.filled { background: #10B981; border-color: #10B981; }
+    #reklam-app .btn-logout {
+      padding: 7px 16px; background: white; border: 1.5px solid #A7F3D0;
+      color: #065F46; border-radius: 8px; font-size: 0.8rem;
+      font-weight: 700; font-family: inherit; cursor: pointer;
+      transition: background 0.15s; white-space: nowrap;
+    }
+    #reklam-app .btn-logout:hover { background: #ECFDF5; }
+
+    /* ── COMPACT OVERVIEW ── */
+    #reklam-app .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+      gap: 5px;
+    }
+    #reklam-app .member-chip {
+      display: flex; align-items: center; gap: 7px;
+      padding: 6px 10px; background: white;
+      border: 1.5px solid #E0E7FF; border-radius: 8px;
+      cursor: pointer; transition: all 0.15s ease;
+    }
+    #reklam-app .member-chip:hover { border-color: #6366F1; box-shadow: 0 2px 8px rgba(99,102,241,0.1); }
+    #reklam-app .member-chip.is-me { border-color: #6EE7B7; background: #F0FDF4; }
+    #reklam-app .chip-dot {
+      width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+    }
+    #reklam-app .dot-0 { background: #FCA5A5; }
+    #reklam-app .dot-1, #reklam-app .dot-2 { background: #FCD34D; }
+    #reklam-app .dot-3 { background: #34D399; }
+    #reklam-app .chip-name {
+      font-size: 0.78rem; font-weight: 600; color: #1E293B;
+      flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      min-width: 0;
+    }
+    #reklam-app .chip-badge {
+      font-size: 0.65rem; font-weight: 700; padding: 1px 5px; border-radius: 99px;
+      flex-shrink: 0;
+    }
+    #reklam-app .badge-chip-0 { background: #FEE2E2; color: #991B1B; }
+    #reklam-app .badge-chip-1, #reklam-app .badge-chip-2 { background: #FEF3C7; color: #92400E; }
+    #reklam-app .badge-chip-3 { background: #D1FAE5; color: #065F46; }
+
+    /* Toggle overview */
+    #reklam-app .toggle-link {
+      font-size: 0.75rem; color: #6366F1; cursor: pointer; font-weight: 600;
+      text-decoration: none; border: none; background: none; font-family: inherit;
+      padding: 0;
+    }
+    #reklam-app .toggle-link:hover { text-decoration: underline; }
+    #reklam-app #overview-body { overflow: hidden; transition: max-height 0.3s ease; }
+
+    /* ── DATE CARDS ── */
+    #reklam-app .dates-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 14px;
+    }
+    #reklam-app .date-card {
+      background: white; border: 1.5px solid #E0E7FF; border-radius: 16px;
+      overflow: hidden; box-shadow: 0 1px 6px rgba(0,0,0,0.04);
+      transition: box-shadow 0.2s;
+    }
+    #reklam-app .date-card:hover { box-shadow: 0 4px 18px rgba(99,102,241,0.1); }
+    #reklam-app .date-card-header {
+      background: linear-gradient(135deg, #4338CA, #6366F1);
+      padding: 13px 16px; color: white;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    #reklam-app .date-card-header .date-label { font-weight: 700; font-size: 0.95rem; }
+    #reklam-app .date-card-header .date-time {
+      display: inline-flex; align-items: center; gap: 3px; margin-top: 4px;
+      background: rgba(255,255,255,0.18); padding: 2px 8px; border-radius: 99px;
+      font-size: 0.7rem; font-weight: 600;
+    }
+    #reklam-app .date-card-header .date-sub { font-size: 0.68rem; opacity: 0.75; margin-top: 3px; }
+    #reklam-app .slots-count {
+      background: rgba(255,255,255,0.2); border-radius: 99px; padding: 4px 10px;
+      font-size: 0.75rem; font-weight: 600; white-space: nowrap; flex-shrink: 0;
+    }
+    #reklam-app .slots-count.full { background: rgba(16,185,129,0.3); }
+    #reklam-app .slots-grid {
+      padding: 12px 14px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px;
+    }
+    #reklam-app .slot {
+      border-radius: 8px; height: 36px; font-size: 0.73rem; font-weight: 600;
+      display: flex; align-items: center; justify-content: center;
+      border: 1.5px solid; transition: all 0.15s ease;
+      overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+      padding: 0 5px; text-align: center;
+    }
+    #reklam-app .slot-empty {
+      border-color: #E0E7FF; color: #C7D2FE; background: #F8F9FF;
+    }
+    #reklam-app .slot-empty.bookable {
+      cursor: pointer;
+    }
+    #reklam-app .slot-empty.bookable:hover {
+      border-color: #6366F1; background: #EEF2FF; color: #6366F1;
+      transform: scale(1.03);
+    }
+    #reklam-app .slot-empty.locked { opacity: 0.5; }
+    #reklam-app .slot-booked {
+      border-color: #C7D2FE; background: #EEF2FF; color: #4338CA;
+    }
+    #reklam-app .slot-mine {
+      border-color: #6EE7B7; background: #ECFDF5; color: #065F46; cursor: pointer;
+    }
+    #reklam-app .slot-mine:hover { background: #D1FAE5; }
+
+    /* ── MODALS ── */
+    #reklam-app .modal-overlay {
+      position: fixed; inset: 0; background: rgba(15,23,42,0.45);
+      backdrop-filter: blur(4px); display: flex; align-items: center;
+      justify-content: center; z-index: 1000; padding: 16px;
+      opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+    }
+    #reklam-app .modal-overlay.active { opacity: 1; pointer-events: all; }
+    #reklam-app .modal-box {
+      background: white; border-radius: 20px; padding: 26px;
+      width: 100%; max-width: 380px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      transform: scale(0.95) translateY(10px); transition: transform 0.2s ease;
+    }
+    #reklam-app .modal-overlay.active .modal-box { transform: scale(1) translateY(0); }
+    #reklam-app .modal-box h3 { font-size: 1.1rem; font-weight: 800; color: #1E293B; margin-bottom: 3px; }
+    #reklam-app .modal-sub { font-size: 0.8rem; color: #64748B; margin-bottom: 18px; }
+    #reklam-app .confirm-date-box {
+      background: #F8F9FF; border: 2px solid #E0E7FF; border-radius: 12px;
+      padding: 14px 16px; margin-bottom: 18px;
+    }
+    #reklam-app .confirm-date-box .cdb-name { font-size: 1rem; font-weight: 700; color: #4338CA; }
+    #reklam-app .confirm-date-box .cdb-time { font-size: 0.8rem; color: #6366F1; margin-top: 4px; }
+    #reklam-app .btn-row { all: revert; display: flex; gap: 9px; }
+    #reklam-app .btn {
+      all: revert;
+      flex: 1; padding: 11px; border-radius: 10px; font-size: 0.88rem;
+      font-weight: 700; font-family: inherit; cursor: pointer; border: none;
+      transition: all 0.15s ease; text-align: center; display: inline-block;
+    }
+    #reklam-app .btn-primary { background: linear-gradient(135deg, #4338CA, #6366F1); color: white; }
+    #reklam-app .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    #reklam-app .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    #reklam-app .btn-secondary { background: #F1F5F9; color: #64748B; border: 1.5px solid #E2E8F0; }
+    #reklam-app .btn-secondary:hover { background: #E2E8F0; }
+    #reklam-app .btn-danger { background: #FEE2E2; color: #991B1B; }
+    #reklam-app .btn-danger:hover { background: #FECACA; }
+
+    /* Member modal */
+    #reklam-app .pass-list { display: flex; flex-direction: column; gap: 7px; margin-top: 12px; }
+    #reklam-app .pass-item {
+      display: flex; align-items: center; gap: 10px; padding: 9px 12px;
+      background: #F8F9FF; border: 1.5px solid #E0E7FF; border-radius: 9px; font-size: 0.82rem;
+    }
+    #reklam-app .pass-item .pass-date { font-weight: 600; color: #4338CA; }
+    #reklam-app .pass-item .pass-meta { font-size: 0.72rem; color: #64748B; }
+    #reklam-app .progress-ring { width: 56px; height: 56px; position: relative; margin: 0 auto 10px; }
+    #reklam-app .progress-ring svg { transform: rotate(-90deg); }
+    #reklam-app .progress-ring .ring-label {
+      position: absolute; inset: 0; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      font-weight: 800; font-size: 1.1rem; color: #4338CA;
+    }
+    #reklam-app .ring-label small { font-size: 0.58rem; color: #94A3B8; font-weight: 500; }
+    #reklam-app .member-modal-top { text-align: center; padding-bottom: 14px; border-bottom: 1.5px solid #F1F5F9; margin-bottom: 14px; }
+
+    /* ── TOAST ── */
+    #reklam-app #toast {
+      position: fixed; bottom: 20px; left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: #1E293B; color: white; padding: 10px 22px; border-radius: 99px;
+      font-size: 0.85rem; font-weight: 500; z-index: 2000; opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease; white-space: nowrap;
+    }
+    #reklam-app #toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    #reklam-app #toast.success { background: #065F46; }
+    #reklam-app #toast.error { background: #991B1B; }
+
+    /* ── NOT LOGGED IN OVERLAY ON DATES ── */
+    #reklam-app .dates-locked-notice {
+      text-align: center; padding: 24px; color: #94A3B8;
+      font-size: 0.85rem; background: white; border-radius: 12px;
+      border: 1.5px dashed #E0E7FF;
+    }
+
+    @media (max-width: 600px) {
+      #reklam-app .dates-grid { grid-template-columns: 1fr; }
+      #reklam-app .slots-grid { grid-template-columns: repeat(3, 1fr); }
+      #reklam-app .login-box { flex-direction: column; align-items: stretch; }
+      #reklam-app .btn-login { align-self: stretch; }
+      #reklam-app .overview-grid { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); }
+    }
+  </style>
 </head>
 <body>
 
@@ -39,16 +326,136 @@
     </div>
   </section>
 
-  <section class="container" style="padding-bottom: 56px;">
-    <div class="embed-wrap">
-      <iframe id="embed-frame" title="Boka Reklampass"></iframe>
-      <div id="embed-loading" class="embed-loading" style="display:none;">
-        <div class="embed-loading-spinner"></div>
-        <p class="embed-loading-text">Laddar bokning…</p>
+  <!-- ═══════════════════════════════════════
+       REKLAMPASS-VERKTYGET (tidigare inbäddat via iframe,
+       nu inbakat direkt på sidan — samma funktion, oförändrad)
+  ════════════════════════════════════════ -->
+  <div id="reklam-app">
+
+    <!-- LOGIN / LOGGED-IN -->
+    <div class="login-card">
+      <!-- NOT LOGGED IN -->
+      <div class="login-box" id="login-form">
+        <div class="login-field" style="max-width:220px">
+          <label>Ditt namn</label>
+          <select id="login-name">
+            <option value="">– Välj namn –</option>
+          </select>
+        </div>
+        <div class="login-field" style="max-width:130px">
+          <label>Kod (4 siffror)</label>
+          <input type="password" id="login-pin" maxlength="4" placeholder="••••" inputmode="numeric" pattern="[0-9]{4}">
+          <span class="login-error" id="login-error">Fel kod – försök igen</span>
+        </div>
+        <button class="btn-login" id="btn-login" onclick="doLogin()">Logga in</button>
       </div>
-      <div id="embed-fallback" class="embed-fallback" style="display:none;"></div>
+
+      <!-- LOGGED IN -->
+      <div class="login-box logged-in" id="login-status" style="display:none">
+        <div class="logged-in-info">
+          <div>
+            <div class="logged-in-name" id="status-name"></div>
+            <div class="logged-in-sub" id="status-sub"></div>
+          </div>
+          <div class="passes-mini" id="status-dots">
+            <div class="pass-dot" id="dot-1"></div>
+            <div class="pass-dot" id="dot-2"></div>
+            <div class="pass-dot" id="dot-3"></div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="doLogout()">Byt person</button>
+      </div>
     </div>
-  </section>
+
+    <div id="gas-status" style="display:none;max-width:1000px;margin:10px auto 0;
+      padding:8px 20px;border-radius:8px;font-size:0.8rem;font-weight:600;"></div>
+
+    <!-- FULL PAGE LOADER -->
+    <div id="page-loader" style="
+      position:relative;background:#F0F4FF;
+      display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;
+      padding: 60px 24px;">
+      <div style="font-size:48px">🎭</div>
+      <div class="spinner" style="width:44px;height:44px;border-width:4px"></div>
+      <div style="font-size:0.9rem;color:#6366F1;font-weight:600">Hämtar data från Google Sheets…</div>
+    </div>
+
+    <div id="main" style="visibility:hidden">
+
+      <!-- OVERVIEW -->
+      <div class="section-wrap">
+        <div class="section-header">
+          <div class="section-title">👥 Ensembleöversikt</div>
+          <button class="toggle-link" id="overview-toggle" onclick="toggleOverview()">Dölj</button>
+        </div>
+        <div class="section-divider"></div>
+        <div id="overview-body">
+          <div class="overview-grid" id="overview-grid"></div>
+        </div>
+      </div>
+
+      <!-- DATES -->
+      <div class="section-wrap" style="margin-top:24px">
+        <div class="section-title" style="margin-bottom:10px">📅 Reklampass – klicka för att boka</div>
+        <div class="section-divider"></div>
+        <div id="dates-container"></div>
+      </div>
+    </div>
+
+    <!-- BOOK CONFIRM MODAL -->
+    <div class="modal-overlay" id="book-modal">
+      <div class="modal-box">
+        <h3>Boka reklampass</h3>
+        <div class="modal-sub" id="bm-sub">Du bokar följande pass i ditt namn:</div>
+        <div class="confirm-date-box">
+          <div class="cdb-name" id="bm-date"></div>
+          <div class="cdb-time" id="bm-time"></div>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="closeModal('book-modal')">Avbryt</button>
+          <button class="btn btn-primary" id="bm-confirm" onclick="confirmBooking()">Boka</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- UNBOOK CONFIRM MODAL -->
+    <div class="modal-overlay" id="unbook-modal">
+      <div class="modal-box">
+        <h3>Avboka pass?</h3>
+        <div class="modal-sub" id="um-sub"></div>
+        <div class="btn-row">
+          <button class="btn btn-secondary" onclick="closeModal('unbook-modal')">Behåll</button>
+          <button class="btn btn-danger" onclick="confirmUnbook()">Avboka</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMBER DETAIL MODAL -->
+    <div class="modal-overlay" id="member-modal">
+      <div class="modal-box">
+        <div class="member-modal-top">
+          <div class="progress-ring">
+            <svg width="56" height="56" viewBox="0 0 56 56">
+              <circle cx="28" cy="28" r="22" fill="none" stroke="#E0E7FF" stroke-width="5"/>
+              <circle cx="28" cy="28" r="22" fill="none" stroke="#6366F1" stroke-width="5"
+                stroke-dasharray="138.2" id="mm-circle" stroke-dashoffset="138.2"
+                stroke-linecap="round" style="transition:stroke-dashoffset 0.5s ease"/>
+            </svg>
+            <div class="ring-label"><span id="mm-count">0</span><small>av 3</small></div>
+          </div>
+          <h3 id="mm-name"></h3>
+          <div class="modal-sub" id="mm-sub" style="margin-bottom:0"></div>
+        </div>
+        <div class="pass-list" id="mm-passes"></div>
+        <div class="btn-row" style="margin-top:14px">
+          <button class="btn btn-secondary" onclick="closeModal('member-modal')">Stäng</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+
+  </div>
 
   <footer class="site-footer">
     <div class="container">
@@ -67,8 +474,515 @@
     </div>
   </footer>
 
-  <script src="js/embed.js"></script>
-  <script>initEmbed('reklampass-embed.html', 'REPLACE_WITH_DEPLOYMENT_ID');</script>
+<script>
+// =====================================================
+// KONFIGURATION
+// =====================================================
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbxYKec8FS6VwfpVtHxFZmRDLyYkcK1_R6OjoQfSJaEcNuYhyABDdadYLjefjlfBvoW5MA/exec';
+
+const MAX_SLOTS     = 12;
+const REQ_PASSES    = 3;
+const LS_KEY        = 'reklampass_bookings_2026';
+const SESSION_KEY   = 'reklampass_user_2026';
+
+// Reservdatum – ersätts av Blad1-data från GAS
+let DATES = [
+  { id: '2026-07-07', label: 'Tisdag 7 juli',   time: '' },
+  { id: '2026-07-09', label: 'Torsdag 9 juli',  time: '' },
+  { id: '2026-07-11', label: 'Lördag 11 juli',  time: '' },
+  { id: '2026-07-14', label: 'Tisdag 14 juli',  time: '' },
+  { id: '2026-07-16', label: 'Torsdag 16 juli', time: '' },
+  { id: '2026-07-18', label: 'Lördag 18 juli',  time: '' },
+  { id: '2026-07-21', label: 'Tisdag 21 juli',  time: '' },
+  { id: '2026-07-23', label: 'Torsdag 23 juli', time: '' },
+];
+
+// Hämtas från Blad2 kolumn A – töms inte manuellt
+let MEMBERS = [];
+
+// =====================================================
+// STATE
+// =====================================================
+let bookings    = {};
+let currentUser = sessionStorage.getItem(SESSION_KEY) || null;
+let pendingDate = null;
+let pendingUnbook = null;
+let overviewOpen = true;
+
+// =====================================================
+// DATA LAYER
+// =====================================================
+async function loadBookings() {
+  setStatus('loading');
+  if (!GAS_URL) {
+    setStatus('no-url');
+    const stored = localStorage.getItem(LS_KEY);
+    if (stored) bookings = JSON.parse(stored);
+    return;
+  }
+  try {
+    const res  = await fetch(GAS_URL + '?action=getAll', { cache: 'no-store' });
+    const data = await res.json();
+    if (data.ok) {
+      bookings = data.bookings || {};
+      if (data.dates && data.dates.length > 0) {
+        DATES = data.dates;
+        setStatus('ok', data.dates.length);
+      } else {
+        setStatus('no-dates');
+      }
+      if (data.members && data.members.length > 0) {
+        MEMBERS = data.members;
+        populateNameDropdown();
+      }
+      return;
+    }
+    setStatus('error', data.error || 'ok=false');
+  } catch(e) {
+    setStatus('fetch-error', e.message);
+    const stored = localStorage.getItem(LS_KEY);
+    if (stored) bookings = JSON.parse(stored);
+  }
+}
+
+function setStatus(type, info) {
+  const el = document.getElementById('gas-status');
+  if (!el) return;
+  const styles = {
+    loading:     ['⏳ Ansluter till Google Sheets…',         '#FEF3C7','#92400E'],
+    ok:          [`✅ Ansluten – ${info} datum hämtade`,      '#D1FAE5','#065F46'],
+    'no-url':    ['⚠️ GAS_URL är tom – datum är hårdkodade', '#FEE2E2','#991B1B'],
+    'no-dates':  ['⚠️ Inga datum i Blad1',                   '#FEE2E2','#991B1B'],
+    'fetch-error':['❌ Fetch-fel: ' + info,                  '#FEE2E2','#991B1B'],
+    error:       ['❌ Serverfel: ' + info,                   '#FEE2E2','#991B1B'],
+  };
+  const [text, bg, color] = styles[type] || ['?','#fff','#000'];
+  el.textContent = text;
+  el.style.background = bg;
+  el.style.color = color;
+  el.style.display = 'block';
+  if (type === 'ok') setTimeout(() => { el.style.display = 'none'; }, 4000);
+}
+
+async function apiBook(date, name) {
+  if (GAS_URL) {
+    const r = await fetch(`${GAS_URL}?action=book&date=${date}&name=${encodeURIComponent(name)}`);
+    return await r.json();
+  }
+  if (!bookings[date]) bookings[date] = [];
+  if (bookings[date].includes(name)) return { ok: false, error: 'Already booked' };
+  bookings[date].push(name);
+  localStorage.setItem(LS_KEY, JSON.stringify(bookings));
+  return { ok: true };
+}
+
+async function apiUnbook(date, name) {
+  if (GAS_URL) {
+    const r = await fetch(`${GAS_URL}?action=unbook&date=${date}&name=${encodeURIComponent(name)}`);
+    return await r.json();
+  }
+  if (bookings[date]) bookings[date] = bookings[date].filter(n => n !== name);
+  localStorage.setItem(LS_KEY, JSON.stringify(bookings));
+  return { ok: true };
+}
+
+// =====================================================
+// LOGIN
+// =====================================================
+async function doLogin() {
+  const name = document.getElementById('login-name').value;
+  const pin  = document.getElementById('login-pin').value;
+  const err  = document.getElementById('login-error');
+  const btn  = document.getElementById('btn-login');
+
+  err.classList.remove('show');
+  if (!name) { showToast('Välj ditt namn', 'error'); return; }
+  if (pin.length !== 4) { showToast('Ange fyra siffror', 'error'); return; }
+
+  btn.disabled = true; btn.textContent = 'Kontrollerar…';
+
+  let ok = false;
+  if (GAS_URL) {
+    try {
+      const r = await fetch(`${GAS_URL}?action=login&name=${encodeURIComponent(name)}&pin=${pin}`);
+      const d = await r.json();
+      ok = d.ok;
+    } catch(e) { ok = false; }
+  } else {
+    // Utan GAS: acceptera alltid (test-läge)
+    ok = true;
+  }
+
+  btn.disabled = false; btn.textContent = 'Logga in';
+
+  if (ok) {
+    currentUser = name;
+    sessionStorage.setItem(SESSION_KEY, name);
+    document.getElementById('login-pin').value = '';
+    renderLoginState();
+    render();
+    showToast(`Välkommen, ${name.split(' ')[0]}! 👋`, 'success');
+  } else {
+    err.classList.add('show');
+  }
+}
+
+function doLogout() {
+  currentUser = null;
+  sessionStorage.removeItem(SESSION_KEY);
+  renderLoginState();
+  render();
+}
+
+function renderLoginState() {
+  const loggedIn = !!currentUser;
+  document.getElementById('login-form').style.display   = loggedIn ? 'none'  : 'flex';
+  document.getElementById('login-status').style.display = loggedIn ? 'flex'  : 'none';
+
+  if (loggedIn) {
+    const count = bookedCount(currentUser);
+    document.getElementById('status-name').textContent = currentUser;
+    document.getElementById('status-sub').textContent  =
+      count === REQ_PASSES ? '✅ Alla 3 pass bokade!' :
+      count === 0 ? 'Inga pass bokade ännu – välj datum nedan' :
+      `${count} av ${REQ_PASSES} pass bokade`;
+    for (let i = 1; i <= 3; i++) {
+      document.getElementById(`dot-${i}`).classList.toggle('filled', i <= count);
+    }
+  }
+}
+
+// Allow Enter in PIN field
+document.getElementById('login-pin').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// =====================================================
+// HELPERS
+// =====================================================
+function bookedCount(name) {
+  return DATES.filter(d => (bookings[d.id] || []).includes(name)).length;
+}
+function bookedDates(name) {
+  return DATES.filter(d => (bookings[d.id] || []).includes(name));
+}
+function firstName(name) {
+  const parts = name.trim().split(' ');
+  if (parts.length === 1) return parts[0];
+  return parts[0] + ' ' + parts[parts.length - 1][0] + '.';
+}
+
+// =====================================================
+// RENDER
+// =====================================================
+function render() {
+  renderLoginState();
+  renderOverview();
+  renderDates();
+}
+
+function renderOverview() {
+  const grid = document.getElementById('overview-grid');
+  grid.innerHTML = '';
+
+  const done    = MEMBERS.filter(n => bookedCount(n) >= REQ_PASSES);
+  const notDone = MEMBERS.filter(n => bookedCount(n) <  REQ_PASSES);
+
+  function makeShelf(title, members, icon, headerStyle) {
+    if (members.length === 0) return;
+
+    const section = document.createElement('div');
+    section.style.cssText = 'margin-bottom:18px';
+
+    const heading = document.createElement('div');
+    heading.style.cssText = `display:flex;align-items:center;gap:8px;padding:8px 12px;
+      border-radius:10px;margin-bottom:8px;font-size:0.82rem;font-weight:700;${headerStyle}`;
+    heading.innerHTML = `<span>${icon}</span> ${title} <span style="margin-left:auto;font-size:0.75rem;opacity:0.8">${members.length} personer</span>`;
+    section.appendChild(heading);
+
+    const chipGrid = document.createElement('div');
+    chipGrid.className = 'overview-grid';
+
+    members.forEach(name => {
+      const count = bookedCount(name);
+      const isMe  = name === currentUser;
+      const chip  = document.createElement('div');
+      chip.className = 'member-chip' + (isMe ? ' is-me' : '');
+      chip.title = `${name} – ${count}/${REQ_PASSES} pass`;
+      chip.innerHTML = `
+        <div class="chip-dot dot-${count}"></div>
+        <div class="chip-name">${name}</div>
+        <span class="chip-badge badge-chip-${count}">${count}/3</span>
+      `;
+      chip.addEventListener('click', () => openMemberModal(name));
+      chipGrid.appendChild(chip);
+    });
+
+    section.appendChild(chipGrid);
+    grid.appendChild(section);
+  }
+
+  makeShelf(
+    'Behöver boka fler pass', notDone,
+    '⏳',
+    'background:#FEF3C7;color:#92400E;border:1.5px solid #FDE68A;'
+  );
+  makeShelf(
+    'Färdiga medlemmar', done,
+    '✅',
+    'background:#D1FAE5;color:#065F46;border:1.5px solid #A7F3D0;'
+  );
+}
+
+function renderDates() {
+  const container = document.getElementById('dates-container');
+
+  if (!currentUser) {
+    container.innerHTML = `
+      <div class="dates-locked-notice">
+        🔐 Logga in med ditt namn och kod för att se och boka dina reklampass.
+      </div>`;
+    return;
+  }
+
+  const grid = document.createElement('div');
+  grid.className = 'dates-grid';
+
+  DATES.forEach(d => {
+    const booked   = bookings[d.id] || [];
+    const count    = booked.length;
+    const maxSlots = d.maxSlots || MAX_SLOTS;
+    const isFull   = count >= maxSlots;
+    const card   = document.createElement('div');
+    card.className = 'date-card';
+
+    let slotsHtml = '';
+    for (let i = 0; i < maxSlots; i++) {
+      if (i < booked.length) {
+        const slotName = booked[i];
+        if (slotName === currentUser) {
+          slotsHtml += `<div class="slot slot-mine"
+            onclick="promptUnbook('${d.id}','${d.label}')"
+            title="Klicka för att avboka ditt pass">✓ Du</div>`;
+        } else {
+          slotsHtml += `<div class="slot slot-booked"
+            title="${slotName}">${firstName(slotName)}</div>`;
+        }
+      } else {
+        if (!isFull) {
+          slotsHtml += `<div class="slot slot-empty bookable"
+            onclick="promptBook('${d.id}','${d.label}')"
+            title="Boka detta pass">＋</div>`;
+        } else {
+          slotsHtml += `<div class="slot slot-empty locked" title="Fullt">–</div>`;
+        }
+      }
+    }
+
+    const timeBadge = d.time
+      ? `<div class="date-time">🕐 ${d.time}</div>`
+      : '';
+    const titleRow = d.title
+      ? `<div style="font-size:0.8rem;font-weight:600;color:rgba(255,255,255,0.92);margin-top:5px">${d.title}</div>`
+      : '';
+
+    card.innerHTML = `
+      <div class="date-card-header">
+        <div>
+          <div class="date-label">📍 ${d.label}</div>
+          ${timeBadge}
+          ${titleRow}
+        </div>
+        <div class="slots-count ${isFull ? 'full' : ''}">${count}/${maxSlots}</div>
+      </div>
+      <div class="slots-grid">${slotsHtml}</div>
+    `;
+    grid.appendChild(card);
+  });
+
+  container.innerHTML = '';
+  container.appendChild(grid);
+}
+
+// =====================================================
+// BOOKING
+// =====================================================
+function promptBook(dateId, dateLabel) {
+  if (!currentUser) { showToast('Logga in först', 'error'); return; }
+  const d = DATES.find(x => x.id === dateId);
+  const alreadyBooked = bookedDates(currentUser).some(x => x.id === dateId);
+  if (alreadyBooked) { showToast('Du är redan bokad på det datumet', 'error'); return; }
+
+  pendingDate = dateId;
+  document.getElementById('bm-date').textContent = dateLabel;
+  const timeText = [d && d.time ? `🕐 ${d.time}` : '', d && d.title ? d.title : ''].filter(Boolean).join('  ·  ');
+  document.getElementById('bm-time').textContent = timeText;
+  document.getElementById('bm-time').style.display = timeText ? 'block' : 'none';
+  document.getElementById('bm-sub').textContent = `Du bokar detta pass som ${currentUser.split(' ')[0]}:`;
+  document.getElementById('bm-confirm').disabled = false;
+  document.getElementById('bm-confirm').textContent = 'Boka';
+  openModal('book-modal');
+}
+
+async function confirmBooking() {
+  const btn = document.getElementById('bm-confirm');
+  btn.disabled = true; btn.textContent = 'Bokar…';
+  const result = await apiBook(pendingDate, currentUser);
+  if (result.ok) {
+    if (GAS_URL) await loadBookings();
+    closeModal('book-modal');
+    render();
+    const count = bookedCount(currentUser);
+    showToast(count >= REQ_PASSES
+      ? `✅ Klart! Du har nu alla ${REQ_PASSES} pass bokade 🎉`
+      : `✅ Bokat! ${count}/${REQ_PASSES} pass klara`, 'success');
+  } else {
+    showToast('Kunde inte boka – försök igen', 'error');
+  }
+  btn.disabled = false; btn.textContent = 'Boka';
+}
+
+function promptUnbook(dateId, dateLabel) {
+  pendingUnbook = { date: dateId, name: currentUser };
+  document.getElementById('um-sub').textContent =
+    `Ta bort din bokning på ${dateLabel}?`;
+  openModal('unbook-modal');
+}
+
+async function confirmUnbook() {
+  const { date, name } = pendingUnbook;
+  const result = await apiUnbook(date, name);
+  if (result.ok) {
+    if (GAS_URL) await loadBookings();
+    closeModal('unbook-modal');
+    render();
+    showToast('Bokning borttagen', '');
+  } else {
+    showToast('Kunde inte avboka', 'error');
+  }
+  pendingUnbook = null;
+}
+
+// =====================================================
+// MEMBER MODAL
+// =====================================================
+function openMemberModal(name) {
+  const dts   = bookedDates(name);
+  const count = dts.length;
+  document.getElementById('mm-name').textContent = name;
+  document.getElementById('mm-count').textContent = count;
+
+  const circ = document.getElementById('mm-circle');
+  const circumference = 138.2;
+  setTimeout(() => {
+    circ.style.strokeDashoffset = circumference - (count / REQ_PASSES) * circumference;
+  }, 50);
+  circ.style.stroke = count >= REQ_PASSES ? '#10B981' : count > 0 ? '#F59E0B' : '#EF4444';
+
+  document.getElementById('mm-sub').textContent =
+    count === 0 ? 'Inga pass bokade ännu' :
+    count < REQ_PASSES ? `${REQ_PASSES - count} pass kvar att boka` :
+    '✅ Alla pass bokade!';
+
+  const list = document.getElementById('mm-passes');
+  list.innerHTML = dts.length === 0
+    ? `<div style="text-align:center;color:#94A3B8;padding:12px;font-size:0.82rem">Inga bokade pass</div>`
+    : dts.map(d => `
+        <div class="pass-item">
+          <span>🎪</span>
+          <div>
+            <div class="pass-date">${d.label}</div>
+            <div class="pass-meta">${[d.time ? '🕐 ' + d.time : '', d.title || 'Oliver Twist – Reklam på stan'].filter(Boolean).join(' · ')}</div>
+          </div>
+        </div>`).join('');
+
+  openModal('member-modal');
+}
+
+// =====================================================
+// OVERVIEW TOGGLE
+// =====================================================
+function toggleOverview() {
+  overviewOpen = !overviewOpen;
+  const body   = document.getElementById('overview-body');
+  const toggle = document.getElementById('overview-toggle');
+  if (overviewOpen) {
+    body.style.maxHeight = body.scrollHeight + 'px';
+    toggle.textContent = 'Dölj';
+  } else {
+    body.style.maxHeight = body.scrollHeight + 'px';
+    requestAnimationFrame(() => { body.style.maxHeight = '0'; });
+    toggle.textContent = 'Visa';
+  }
+}
+
+// Set initial max-height after render for transition to work
+function initOverviewHeight() {
+  const body = document.getElementById('overview-body');
+  body.style.maxHeight = body.scrollHeight + 'px';
+}
+
+// =====================================================
+// MODAL HELPERS
+// =====================================================
+function openModal(id) {
+  document.getElementById(id).classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeModal(id) {
+  document.getElementById(id).classList.remove('active');
+  document.body.style.overflow = '';
+  if (id === 'member-modal') {
+    document.getElementById('mm-circle').style.strokeDashoffset = 138.2;
+  }
+}
+document.querySelectorAll('.modal-overlay').forEach(el => {
+  el.addEventListener('click', e => {
+    if (e.target === el) { closeModal(el.id); }
+  });
+});
+
+// =====================================================
+// TOAST
+// =====================================================
+let toastTimer;
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'show' + (type ? ' ' + type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { t.className = ''; }, 3200);
+}
+
+// =====================================================
+// POPULATE NAME DROPDOWNS
+// =====================================================
+function populateNameDropdown() {
+  const sel = document.getElementById('login-name');
+  sel.innerHTML = '<option value="">– Välj namn –</option>';
+  MEMBERS.forEach(m => {
+    const o = document.createElement('option'); o.value = m; o.textContent = m; sel.appendChild(o);
+  });
+}
+
+// =====================================================
+// INIT
+// =====================================================
+async function init() {
+  populateNameDropdown();
+  await loadBookings();
+  document.getElementById('page-loader').style.display = 'none';
+  document.getElementById('main').style.visibility = 'visible';
+  render();
+  initOverviewHeight();
+
+  if (GAS_URL) {
+    setInterval(async () => { await loadBookings(); render(); }, 30000);
+  }
+}
+
+init();
+</script>
 
 </body>
 </html>

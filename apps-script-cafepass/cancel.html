@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <base target="_top">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --bg:      #f0f4f8;
+        --surface: #ffffff;
+        --border:  #e2e8f0;
+        --text:    #0f172a;
+        --muted:   #64748b;
+        --red:     #dc2626;
+        --red-l:   #ffe4e6;
+        --radius:  20px;
+        --shadow:  0 8px 32px rgba(15,23,42,0.12);
+      }
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { margin: 0; padding: 0; }
+      body { font-family: 'Nunito Sans', sans-serif; background: var(--bg); min-height: 100vh; display: flex; justify-content: center; align-items: center; padding: 24px; color: var(--text); }
+      .card { max-width: 480px; width: 100%; background: var(--surface); padding: 40px; border-radius: var(--radius); box-shadow: var(--shadow); border: 1px solid var(--border); }
+      h1 { font-family: 'Nunito', sans-serif; font-weight: 900; font-size: 1.8rem; margin: 0 0 6px; letter-spacing: -0.4px; }
+      .sub { color: var(--muted); margin: 0 0 26px; font-size: 0.93rem; }
+
+      .detail-grid { background: #f8fafc; border: 1.5px solid var(--border); border-radius: 14px; overflow: hidden; margin-bottom: 24px; }
+      .detail-row { display: flex; justify-content: space-between; align-items: baseline; padding: 13px 18px; border-bottom: 1px solid var(--border); gap: 12px; }
+      .detail-row:last-child { border-bottom: none; }
+      .dl { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); flex-shrink: 0; }
+      .dv { font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 0.95rem; text-align: right; }
+
+      .field { margin-bottom: 20px; }
+      .field label { display: block; font-size: 0.75rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: var(--muted); margin-bottom: 7px; }
+      textarea { width: 100%; padding: 12px 14px; border: 2px solid var(--border); border-radius: 10px; font-family: 'Nunito Sans', sans-serif; font-size: 14px; min-height: 90px; resize: vertical; transition: border-color 0.15s; color: var(--text); }
+      textarea:focus { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px rgba(220,38,38,0.08); }
+
+      .btn-cancel { width: 100%; background: var(--red); color: white; padding: 14px; border: none; border-radius: 12px; font-family: 'Nunito', sans-serif; font-size: 15px; font-weight: 800; cursor: pointer; transition: opacity 0.15s, transform 0.1s; letter-spacing: 0.02em; }
+      .btn-cancel:hover { opacity: 0.88; transform: translateY(-1px); }
+      .btn-cancel:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+      .processing { margin-top: 12px; padding: 10px 14px; border-radius: 8px; background: #f0fdfa; color: #0f766e; font-size: 0.88rem; font-weight: 700; display: none; text-align: center; }
+
+      .error-card { text-align: center; padding: 16px 0; }
+      .error-icon { font-size: 2.5rem; margin-bottom: 14px; }
+    </style>
+</head>
+<body>
+  <div class="card">
+    <? if (!passDetails) { ?>
+      <div class="error-card">
+        <div class="error-icon">⚠️</div>
+        <h1>Ogiltig länk</h1>
+        <p class="sub">Den här länken är ogiltig eller passet har redan avbokats.</p>
+      </div>
+    <? } else { ?>
+      <h1>Avboka pass</h1>
+      <p class="sub">Du avbokar följande pass. Ange en anledning och bekräfta.</p>
+
+      <div class="detail-grid">
+        <div class="detail-row">
+          <span class="dl">Föreställning</span>
+          <span class="dv"><?= passDetails.forestallning ?></span>
+        </div>
+        <div class="detail-row">
+          <span class="dl">Datum</span>
+          <span class="dv"><?= passDetails.datum ?></span>
+        </div>
+        <div class="detail-row">
+          <span class="dl">Tid</span>
+          <span class="dv"><?= passDetails.tid ?></span>
+        </div>
+      </div>
+
+      <div class="field">
+        <label for="reason">Anledning till avbokning</label>
+        <textarea id="reason" placeholder="T.ex. sjukdom, fått förhinder…"></textarea>
+      </div>
+
+      <button class="btn-cancel" onclick="submit()">Bekräfta avbokning</button>
+      <div class="processing" id="proc">Avbokar, vänta…</div>
+
+      <script>
+        const PI = { bookingId: '<?= passDetails.bookingId ?>', token: '<?= passDetails.token ?>' };
+        function submit() {
+          const reason = document.getElementById('reason').value.trim();
+          if (!reason) {
+            const ta = document.getElementById('reason');
+            ta.style.borderColor = '#dc2626';
+            ta.focus();
+            return;
+          }
+          document.querySelector('.btn-cancel').disabled = true;
+          document.getElementById('proc').style.display = 'block';
+          google.script.run.withSuccessHandler(done).avbokaPass({ bookingId: PI.bookingId, token: PI.token, reason });
+        }
+        function done(msg) {
+          document.body.innerHTML = `
+            <div class="card" style="text-align:center;padding:48px 40px;">
+              <div style="font-size:3rem;margin-bottom:16px;">✅</div>
+              <h1 style="font-family:Nunito,sans-serif;font-weight:900;font-size:1.7rem;margin:0 0 10px;letter-spacing:-0.4px;">Avbokning bekräftad</h1>
+              <p style="color:#64748b;font-size:0.95rem;margin:0;line-height:1.6;">${msg}</p>
+            </div>`;
+        }
+      </script>
+    <? } ?>
+  </div>
+</body>
+</html>
