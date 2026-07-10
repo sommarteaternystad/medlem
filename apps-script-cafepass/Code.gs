@@ -1,7 +1,7 @@
 // =================================================================
 // Fil: Code.gs
-// Version 17.2: Tillägg av JSON-endpoints (getPasses, book) för att
-// kunna anropas via fetch() från medlemssidan utan iframe.
+// Version 17.3: Tillägg av JSON-endpoints (getPasses, getInfo, book)
+// för att kunna anropas via fetch() från medlemssidan utan iframe.
 // Inga befintliga funktioner är ändrade eller borttagna.
 // =================================================================
 
@@ -16,6 +16,10 @@ function doGet(e) {
   // ── NYTT: JSON-endpoints för fristående frontend (medlemssidan) ──
   if (e.parameter.action === 'getPasses') {
     return ContentService.createTextOutput(JSON.stringify(getGroupedPasses()))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+  if (e.parameter.action === 'getInfo') {
+    return ContentService.createTextOutput(JSON.stringify(getSystemData().infoText))
       .setMimeType(ContentService.MimeType.JSON);
   }
   if (e.parameter.action === 'book') {
