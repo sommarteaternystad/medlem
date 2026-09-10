@@ -339,6 +339,9 @@ h2 {
 
 .link-tile--wide { grid-column: span 3; min-height: 150px; }
 .link-tile--half { grid-column: span 3; }
+.link-tile--featured { grid-column: span 3; min-height: 260px; }
+.link-tile--featured .link-tile-title { font-size: clamp(28px, 4vw, 40px); }
+.link-tile--featured .link-tile-desc { font-size: 15px; }
 
 @media (min-width: 720px) {
   .link-tile--half { grid-column: span 1; }
@@ -362,8 +365,8 @@ h2 {
 .link-tile--schema .link-tile-inner {
   background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
 }
-.link-tile--cafe .link-tile-inner {
-  background: linear-gradient(135deg, #5a4010 0%, #281800 100%);
+.link-tile--jul .link-tile-inner {
+  background: linear-gradient(135deg, #1a4a28 0%, #06150c 100%);
 }
 .link-tile--tickets .link-tile-inner {
   background: linear-gradient(135deg, #1c2a5c 0%, #0a0f28 100%);
@@ -417,6 +420,50 @@ h2 {
 
 .link-tile.is-disabled { opacity: 0.6; cursor: default; }
 .link-tile.is-disabled:hover { transform: none; box-shadow: var(--shadow-dark); }
+
+/* ══════════════════════════════════════════════
+   ARKIV (små rutor för passerade produktioner/länkar)
+══════════════════════════════════════════════ */
+
+.archive-label {
+  margin: 44px 0 14px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  color: #9c9c9c;
+}
+
+.archive-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: 10px;
+}
+
+.archive-tile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  min-height: 58px;
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  box-shadow: var(--shadow);
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.archive-tile:hover { transform: translateY(-2px); box-shadow: 0 14px 32px rgba(0,0,0,0.20); }
+.archive-tile svg { flex-shrink: 0; opacity: 0.65; }
+
+.archive-tile--oliver { background: linear-gradient(135deg, var(--crimson) 0%, #3a0a16 100%); }
+.archive-tile--lilla { background: linear-gradient(135deg, var(--green) 0%, var(--green-deep) 100%); }
+.archive-tile--schema { background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%); }
+.archive-tile--tickets { background: linear-gradient(135deg, #1c2a5c 0%, #0a0f28 100%); }
+.archive-tile--reklam { background: linear-gradient(135deg, #4338CA 0%, #151046 100%); }
 
 /* ══════════════════════════════════════════════
    RESURS-KORT (dokumentlänkar på innehållssidor)
@@ -674,6 +721,10 @@ h2 {
   /* Snabblänkar som kompakta rader istället för stora kort */
   .link-grid { gap: 8px; }
   .link-tile, .link-tile--wide, .link-tile--half { min-height: 0; }
+  .link-tile--featured { min-height: 0; }
+  .link-tile--featured .link-tile-title { font-size: 20px; }
+
+  .archive-grid { grid-template-columns: 1fr; }
 
   .link-tile-inner {
     flex-direction: row;
